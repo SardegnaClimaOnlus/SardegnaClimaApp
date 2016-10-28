@@ -106,7 +106,7 @@ angular.module('sardegnaclima')
                         return lookupTable[parseInt(temp)];
                     },
 
-                   "hum": function(hum){ 		
+                   "hum": function(hum){
                         console.log(hum);
                         if(hum === null) return "#BFBFBF";
                         hum = parseFloat(hum);
@@ -143,7 +143,7 @@ angular.module('sardegnaclima')
                             else if(100 > hum && hum <= 120)
                                 return "#00599F";
                     },
-		  "wspeed": function(wspeed){ 		
+		  "wspeed": function(wspeed){
                         console.log(wspeed);
                         if(wspeed === null) return "#BFBFBF";
                         wspeed = parseFloat(wspeed);
@@ -430,10 +430,10 @@ angular.module('sardegnaclima')
 			    "47": "#5C0084",
 			    "48": "#5C0084"
                         };
-                        return lookupTable[parseInt(tempmax)];                    
+                        return lookupTable[parseInt(tempmax)];
                     }
 
-                
+
 
                 };
                 return strategy[type](value);
@@ -465,7 +465,7 @@ angular.module('sardegnaclima')
                 station: station
             });
             google.maps.event.addListener(marker, 'click', function() {
-               
+
                 $rootScope.$apply(function() {
                     $location.path('/station/' + marker.station.id);
                 });
@@ -477,7 +477,7 @@ angular.module('sardegnaclima')
     /*
      * Stations model Singleton
      */
-    .factory('Stations2', function(){
+    .factory('Stations2', function($rootScope){
         return {
             model: null,
             cleanModel: function(){
@@ -490,7 +490,7 @@ angular.module('sardegnaclima')
                     console.log(moment(model[i].measure.date));
                     console.log("---> yesterday");
                     console.log(moment().subtract(1, 'day'));
-                    if(moment(model[i].measure.date) > moment().subtract(1, 'day') && moment(model[i].measure.date) < moment()) 
+                    if($rootScope.debugMode || moment(model[i].measure.date) > moment().subtract(1, 'day') && moment(model[i].measure.date) < moment())
                         stations.push(model[i]);
                 }
                 return stations;
@@ -522,7 +522,7 @@ angular.module('sardegnaclima')
                 this.map = new google.maps.Map($("#container").find("#map")[0], mapOptions);
                 this.settings.mode = "temp";
                 $rootScope.mapMode = "temp";
-                   
+
                 // bounds of the desired area
                 var allowedBounds = new google.maps.LatLngBounds(
                     new google.maps.LatLng(38.403112, 6.918923),    // SO
@@ -540,8 +540,8 @@ angular.module('sardegnaclima')
                 var center = lastValidCenter;
 
 
-              
-                          
+
+
                google.maps.event.addListener(self.map, 'center_changed', function() {
                     center = self.map.getCenter();
                     if (allowedBounds.contains(center)) {
@@ -556,12 +556,12 @@ angular.module('sardegnaclima')
                     }
                     if(center.lat() > boundLimits.minLat && center.lat() < boundLimits.maxLat){
                         newLat = center.lat();
-                    }  
+                    }
                     self.map.panTo(new google.maps.LatLng(newLat, newLng));
               });
-              
+
                 google.maps.event.addListener(self.map, 'zoom_changed', function() {
-                                    
+
                     if (self.map.getZoom() < 7 ) {
                         self.map.setZoom(7);
                     }
@@ -623,16 +623,17 @@ angular.module('sardegnaclima')
 
         return SardegnaClimaMap;
     })
-    
+
     /*
      *  Load Model thread
      */
-    .run(function(MainService,Stations2,SardegnaClimaMap) {
+    .run(function(MainService,Stations2,SardegnaClimaMap, $rootScope) {
         var fifteenMinutesInMilliseconds = 900000;
         var oneMinuteInMilliseconds = 60000;
         var refreshInterval = fifteenMinutesInMilliseconds;
-        
+
         SardegnaClimaMap.refresh();
         setInterval(function(){SardegnaClimaMap.refresh()}, refreshInterval);
+        $rootScope.debugMode = true;
 
     });
