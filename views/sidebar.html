@@ -12,7 +12,16 @@
       <a ng-click="setMapMode('rain')" class="list-group-item" ng-class="{'map-mode-active': (mapMode=='rain')}">Piogge [mm]</a>
       <a ng-click="setMapMode('wspeed')" class="list-group-item" ng-class="{'map-mode-active': (mapMode=='wspeed')}">Vento [km/h]</a>
       <a ng-click="setMapMode('radar')" class="list-group-item" ng-class="{'map-mode-active': (mapMode=='radar')}">Radar Meteo</a>
-    </div>
-
+  
+        
+      </div>
+<div><table class="table table-hover"> <tr ng-hide="(results.measure.temp===null)"><th> Stazione con temperatura più alta:
+        </th><th><span class="station-name-max">{{name}}</span></th>
+    <th><span class="station-temp-max">{{value}}</span></th>
+    <th>°C</th>
+    </tr>
+    </table>
   </div>
+  </div>
+    
 </div>

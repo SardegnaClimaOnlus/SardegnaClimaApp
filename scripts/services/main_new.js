@@ -601,6 +601,14 @@ angular.module('sardegnaclima')
             refresh: function(){
                 return MainService.getSummary().then(function(summary){
                     Stations2.setModel(summary);
+                    var results[];
+                    var max=_.max(items, function(summary)){
+                                  return summary.measure.temp;
+                                  }
+                                  results.push(max);
+                    $rootScope.value=results.measure.temp;
+                    $rootScope.name=results.name;
+                    
                     SardegnaClimaMap.generateMarkers();
                     SardegnaClimaMap.init();
                     SardegnaClimaMap.cleanMap();
